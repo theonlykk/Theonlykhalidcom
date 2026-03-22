@@ -1,22 +1,249 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TheOnlyKhalid</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet" />
   <style>
-    body {
-      font-family: Arial;
-      text-align: center;
-      margin-top: 15%;
-      background: #0f172a;
-      color: #e2e8f0;
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0a0f1e;
+      --bg-card:   #0e1528;
+      --border:    rgba(99, 179, 237, 0.12);
+      --accent:    #63b3ed;
+      --accent-2:  #4fd1c5;
+      --muted:     rgba(226, 232, 240, 0.38);
+      --text:      #e2e8f0;
+      --mono:      'DM Mono', monospace;
+      --sans:      'DM Sans', sans-serif;
     }
-    h1 { font-size: 2.5em; }
-    p { opacity: 0.7; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-weight: 300;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(99,179,237,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99,179,237,0.03) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(99,179,237,0.07) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    header {
+      padding: 5rem 0 3.5rem;
+      opacity: 0;
+      animation: fadeUp 0.7s ease 0.1s forwards;
+    }
+
+    .eyebrow {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 1.1rem;
+    }
+
+    h1 {
+      font-family: var(--mono);
+      font-size: clamp(1.9rem, 5vw, 2.8rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      color: var(--text);
+    }
+
+    h1 span { color: var(--accent); }
+
+    .tagline {
+      margin-top: 1rem;
+      font-size: 0.95rem;
+      color: var(--muted);
+      max-width: 420px;
+      line-height: 1.7;
+    }
+
+    .divider {
+      width: 40px;
+      height: 1px;
+      background: var(--border);
+      margin: 2.5rem 0;
+      opacity: 0;
+      animation: fadeUp 0.7s ease 0.3s forwards;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      opacity: 0;
+      animation: fadeUp 0.7s ease 0.45s forwards;
+    }
+
+    .card {
+      background: var(--bg-card);
+      padding: 2rem 1.75rem;
+      text-decoration: none;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      transition: background 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(99,179,237,0.04), transparent);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .card:hover { background: #111827; }
+    .card:hover::before { opacity: 1; }
+
+    .card-tag {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .card.soon .card-tag { color: var(--muted); }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.4;
+      color: var(--text);
+    }
+
+    .card.soon .card-title { color: var(--muted); }
+
+    .card-desc {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.65;
+      flex: 1;
+    }
+
+    .card-arrow {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      margin-top: 0.5rem;
+      transition: transform 0.2s ease;
+      display: inline-block;
+    }
+
+    .card:hover .card-arrow { transform: translateX(4px); }
+    .card.soon .card-arrow { color: var(--muted); }
+
+    footer {
+      padding: 3rem 0 4rem;
+      opacity: 0;
+      animation: fadeUp 0.7s ease 0.6s forwards;
+    }
+
+    .footer-line {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 480px) {
+      header { padding: 3.5rem 0 2.5rem; }
+      .grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
-  <h1>TheOnlyKhalid</h1>
-  <p>Yield curves & analytics coming soon</p>
+  <div class="wrap">
+    <header>
+      <p class="eyebrow">Fixed Income &amp; Quantitative Analytics</p>
+      <h1>The<span>Only</span>Khalid</h1>
+      <p class="tagline">Yield curves, credit spreads, and systematic tools for rates markets.</p>
+    </header>
+
+    <div class="divider"></div>
+
+    <div class="grid">
+
+      <a class="card" href="https://theonlykhalid-cds-dashboard.hf.space" target="_blank" rel="noopener">
+        <span class="card-tag">Credit</span>
+        <p class="card-title">CDS Pairs Dashboard</p>
+        <p class="card-desc">Cointegration-based pairs trading on CDX.NA.IG names using CreditGrades implied spreads.</p>
+        <span class="card-arrow">→ open</span>
+      </a>
+
+      <a class="card" href="https://huggingface.co/spaces/theonlykhalid/stocks-dashboard" target="_blank" rel="noopener">
+        <span class="card-tag">Equity</span>
+        <p class="card-title">Stocks Cointegration</p>
+        <p class="card-desc">Rolling OLS cointegration across equity names mapped from CDX universe with z-score and half-life signals.</p>
+        <span class="card-arrow">→ open</span>
+      </a>
+
+      <div class="card soon">
+        <span class="card-tag">Rates — coming soon</span>
+        <p class="card-title">Bond Analytics</p>
+        <p class="card-desc">Yield curve construction, key-rate DV01, and multi-model curve fitting across UST and CAD markets.</p>
+        <span class="card-arrow">in development</span>
+      </div>
+
+    </div>
+
+    <footer>
+      <p class="footer-line">theonlykhalid.com &nbsp;·&nbsp; Toronto</p>
+    </footer>
+  </div>
 </body>
 </html>
